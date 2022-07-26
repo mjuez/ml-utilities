@@ -16,8 +16,8 @@ object ToConfusionMatrix {
         label
     }
 
-    uniqueLabels.par.map { trueLabel =>
-      uniqueLabels.par.map { predictedLabel =>
+    for(trueLabel <- uniqueLabels) yield {
+      for(predictedLabel <- uniqueLabels) yield {
         val rows = predDS
           .filter(
             col(labelCol) === trueLabel && col(predictionCol) === predictedLabel
@@ -31,8 +31,8 @@ object ToConfusionMatrix {
         } else {
           rows.map { case Row(label: Double, count: Long) => count }.head
         }
-      }.toArray
-    }.toArray
+      }
+    }
   }
 
   def cmToString(cm: Array[Array[Long]]): String = {
